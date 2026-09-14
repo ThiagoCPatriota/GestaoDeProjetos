@@ -23,6 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".FormActivity"
+            android:label="@string/novo_projeto"
+            android:theme="@style/Theme.GestaoDeProjetos" />
+
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/detalhes_projeto"
+            android:theme="@style/Theme.GestaoDeProjetos" />
     </application>
 
 </manifest>
