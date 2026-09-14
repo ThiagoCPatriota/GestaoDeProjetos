@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card_projeto"
+    android:padding="12dp"
+    android:layout_marginTop="12dp">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="#EEEEEE"
+        android:src="@android:drawable/ic_menu_report_image"
+        android:scaleType="centerInside"
+        android:contentDescription="Miniatura do projeto" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNomeProjeto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            tools:text="Projeto de Mobile" />
+
+        <TextView
+            android:id="@+id/tvDisciplina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            tools:text="Disciplina: Desenvolvimento Mobile" />
+
+        <TextView
+            android:id="@+id/tvEntrega"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            tools:text="Entrega: 18/09" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnVerDetalhes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Ver detalhes"
+        style="?android:attr/borderlessButtonStyle" />
+
+</LinearLayout>
