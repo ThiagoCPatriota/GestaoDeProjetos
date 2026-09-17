@@ -1,31 +1,52 @@
 package gestaodeprojetos.alunos
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import gestaodeprojetos.alunos.data.ProjectStorage
 import gestaodeprojetos.alunos.model.Project
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var container: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Dados de exemplo para o Dia 4 (objetivo: tela inicial abrindo no
-        // emulador). A partir do Dia 7/8, esta lista deixa de ser fixa e
-        // passa a refletir os projetos cadastrados via FormActivity.
-        val projetos = listOf(
-            Project("Projeto de Mobile", "Desenvolvimento Mobile", "18/09"),
-            Project("Trabalho de Banco de Dados", "Banco de Dados", "22/09")
+        container = findViewById(R.id.containerProjetos)
+
+        findViewById<Button>(R.id.btnNovoProjeto).setOnClickListener {
+            startActivity(Intent(this, FormActivity::class.java))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Recarrega a lista sempre que a tela volta a ficar visível, para
+        // refletir um projeto recém-cadastrado (RF-09 / CA-08, Dia 12).
+        carregarProjetos()
+    }
+
+    private fun carregarProjetos() {
+        container.removeAllViews()
+
+        val projetos = mutableListOf(
+            Project("Projeto de Mobile", "Desenvolvimento Mobile", "05/09", "18/09", "10/09", "19:00", "21:00"),
+            Project("Trabalho de Banco de Dados", "Banco de Dados", "08/09", "22/09", "15/09", "20:00", "22:00")
         )
 
-        val container = findViewById<LinearLayout>(R.id.containerProjetos)
-        val inflater = LayoutInflater.from(this)
+        // RF-09 (Dia 12): se houver um projeto salvo em SharedPreferences,
+        // ele aparece no topo da lista após reabrir o app.
+        ProjectStorage.carregarUltimoProjeto(this)?.let { salvo ->
+            projetos.add(0, salvo)
+        }
 
+        val inflater = LayoutInflater.from(this)
         for (projeto in projetos) {
             val itemView = inflater.inflate(R.layout.item_project, container, false)
 
@@ -36,18 +57,19 @@ class MainActivity : AppCompatActivity() {
                 "Entrega: ${projeto.dataEntrega}"
 
             itemView.findViewById<Button>(R.id.btnVerDetalhes).setOnClickListener {
-                // TODO (Dia 7+, tarefa 3.5 do EAP): trocar por Intent explícita
-                // para DetailActivity, enviando os dados via putExtra.
-                Toast.makeText(this, "Detalhes de ${projeto.nome} (em breve)", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, DetailActivity::class.java).apply {
+                    putExtra(DetailActivity.EXTRA_NOME, projeto.nome)
+                    putExtra(DetailActivity.EXTRA_DISCIPLINA, projeto.disciplina)
+                    putExtra(DetailActivity.EXTRA_INICIO, projeto.dataInicio)
+                    putExtra(DetailActivity.EXTRA_ENTREGA, projeto.dataEntrega)
+                    putExtra(DetailActivity.EXTRA_DIA_ESTUDO, projeto.diaEstudo)
+                    putExtra(DetailActivity.EXTRA_HORARIO_INICIO, projeto.horarioInicio)
+                    putExtra(DetailActivity.EXTRA_HORARIO_TERMINO, projeto.horarioTermino)
+                }
+                startActivity(intent)
             }
 
             container.addView(itemView)
-        }
-
-        findViewById<Button>(R.id.btnNovoProjeto).setOnClickListener {
-            // TODO (Dia 7+, tarefa 3.5 do EAP): trocar por Intent explícita
-            // para FormActivity.
-            Toast.makeText(this, "Novo projeto (em breve)", Toast.LENGTH_SHORT).show()
         }
     }
 }

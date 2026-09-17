@@ -18,7 +18,7 @@
             android:id="@+id/tvAppTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UniFocus"
+            android:text="@string/unifocus"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
             android:id="@+id/tvScreenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Meus Projetos"
+            android:text="@string/meus_projetos"
             android:textSize="16sp"
             android:textColor="#666666"
             android:layout_marginTop="2dp" />
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="+ Novo Projeto"
+        android:text="@string/novo_projeto_plus"
         android:backgroundTint="#757575"
         android:textColor="#FFFFFF" />
 

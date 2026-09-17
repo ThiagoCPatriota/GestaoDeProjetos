@@ -1,3 +1,29 @@
 <resources>
-    <string name="app_name">GestaoDeProjetos</string>
+    <string name="app_name">Gestão de Projetos</string>
+    <string name="label_disciplina">Disciplina: %1$s</string>
+    <string name="label_entrega">Entrega: %1$s</string>
+    <string name="msg_calendario_futuro">Integração com calendário chega no Dia 10</string>
+    <string name="msg_projeto_salvo">Projeto salvo (passagem de dados completa no Dia 8)</string>
+    <string name="unifocus">UniFocus</string>
+    <string name="detalhes_do_projeto">Detalhes do Projeto</string>
+    <string name="novo_projeto">Novo Projeto</string>
+    <string name="meus_projetos">Meus Projetos</string>
+    <string name="novo_projeto_plus">+ Novo Projeto</string>
+
+    <string name="hint_nome_projeto">Ex.: Trabalho de Banco de Dados</string>
+    <string name="hint_disciplina">Ex.: Desenvolvimento Mobile</string>
+    <string name="hint_data">dd/mm/aaaa</string>
+    <string name="hint_horario">hh:mm</string>
+    <string name="desc_selecionar_data">Selecionar data</string>
+    <string name="desc_selecionar_horario">Selecionar horário</string>
+
+    <string name="label_nome_projeto">Nome do Projeto</string>
+    <string name="label_disciplina_simples">Disciplina</string>
+    <string name="label_data_inicio">Data de Início</string>
+    <string name="label_data_entrega">Data de Entrega</string>
+    <string name="label_dia_estudo">Dia de Estudo</string>
+    <string name="label_horario_inicio">Horário de Início</string>
+    <string name="label_horario_termino">Horário de Término</string>
+    <string name="btn_salvar">Salvar</string>
+    <string name="btn_cancelar">Cancelar</string>
 </resources>

@@ -8,19 +8,10 @@
     android:padding="12dp"
     android:layout_marginTop="12dp">
 
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="#EEEEEE"
-        android:src="@android:drawable/ic_menu_report_image"
-        android:scaleType="centerInside"
-        android:contentDescription="Miniatura do projeto" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="12dp"
         android:orientation="vertical">
 
         <TextView
