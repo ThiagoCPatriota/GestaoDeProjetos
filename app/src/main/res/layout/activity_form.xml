@@ -59,12 +59,16 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spDisciplina"
+            <EditText
+                android:id="@+id/etDisciplina"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext" />
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/hint_disciplina"
+                android:inputType="text"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -83,7 +87,8 @@
                 android:drawableStart="@drawable/ic_calendar"
                 android:drawablePadding="8dp"
                 android:hint="@string/hint_data"
-                android:inputType="date"
+                android:inputType="text"
+                android:maxLength="10"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp" />
 
@@ -104,7 +109,8 @@
                 android:drawableStart="@drawable/ic_calendar"
                 android:drawablePadding="8dp"
                 android:hint="@string/hint_data"
-                android:inputType="date"
+                android:inputType="text"
+                android:maxLength="10"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp" />
 
@@ -151,7 +157,8 @@
                         android:drawableStart="@drawable/ic_clock"
                         android:drawablePadding="8dp"
                         android:hint="@string/hint_horario"
-                        android:inputType="time"
+                        android:inputType="text"
+                        android:maxLength="5"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp" />
                 </LinearLayout>
@@ -182,11 +189,32 @@
                         android:drawableStart="@drawable/ic_clock"
                         android:drawablePadding="8dp"
                         android:hint="@string/hint_horario"
-                        android:inputType="time"
+                        android:inputType="text"
+                        android:maxLength="5"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/observacoes"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etObservacoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext"
+                android:hint="Adicione observações sobre o projeto (opcional)..."
+                android:inputType="textMultiLine"
+                android:gravity="top|start"
+                android:padding="12dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
