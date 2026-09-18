@@ -32,7 +32,6 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        // RF-05 (Dia 9): recuperação dos extras enviados pela tela anterior.
         nome = intent.getStringExtra(EXTRA_NOME) ?: "-"
         disciplina = intent.getStringExtra(EXTRA_DISCIPLINA) ?: "-"
         val inicio = intent.getStringExtra(EXTRA_INICIO) ?: "-"
@@ -42,14 +41,14 @@ class DetailActivity : AppCompatActivity() {
         horarioTermino = intent.getStringExtra(EXTRA_HORARIO_TERMINO) ?: "-"
 
         findViewById<TextView>(R.id.tvDetalheNomeProjeto).text = nome
-        findViewById<TextView>(R.id.tvDetalheDisciplina).text = "Disciplina: $disciplina"
+        findViewById<TextView>(R.id.tvDetalheDisciplina).text = getString(R.string.label_disciplina, disciplina)
 
-        findViewById<TextView>(R.id.tvLinhaProjeto).text = "Projeto: $nome"
-        findViewById<TextView>(R.id.tvLinhaDisciplina).text = "Disciplina: $disciplina"
-        findViewById<TextView>(R.id.tvLinhaInicio).text = "Início: $inicio"
-        findViewById<TextView>(R.id.tvLinhaEntrega).text = "Entrega: $entrega"
-        findViewById<TextView>(R.id.tvLinhaDiaEstudo).text = "Dia de Estudo: $diaEstudo"
-        findViewById<TextView>(R.id.tvLinhaHorario).text = "Horário: $horarioInicio - $horarioTermino"
+        findViewById<TextView>(R.id.tvLinhaProjeto).text = nome
+        findViewById<TextView>(R.id.tvLinhaDisciplina).text = disciplina
+        findViewById<TextView>(R.id.tvLinhaInicio).text = inicio
+        findViewById<TextView>(R.id.tvLinhaEntrega).text = entrega
+        findViewById<TextView>(R.id.tvLinhaDiaEstudo).text = diaEstudo
+        findViewById<TextView>(R.id.tvLinhaHorario).text = "$horarioInicio - $horarioTermino"
 
         findViewById<Button>(R.id.btnAdicionarCalendario).setOnClickListener {
             abrirCalendario()
@@ -60,8 +59,6 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    // RF-07 (Dia 10): Intent implícita baseada no CalendarContract, evitando
-    // implementar notificações próprias em background (premissa do plano).
     private fun abrirCalendario() {
         val inicioMillis = calcularMillis(diaEstudo, horarioInicio)
         val fimMillis = calcularMillis(diaEstudo, horarioTermino)
