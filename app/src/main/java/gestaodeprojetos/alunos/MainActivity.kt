@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import gestaodeprojetos.alunos.data.ProjectStorage
 import gestaodeprojetos.alunos.model.Project
+import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,7 +71,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            container.addView(itemView)
+        itemView.findViewById<TextView>(R.id.tvNomeProjeto).text = projeto.nome
+        itemView.findViewById<TextView>(R.id.tvDisciplina).text = getString(R.string.label_disciplina, projeto.disciplina)
+        itemView.findViewById<TextView>(R.id.tvEntrega).text = getString(R.string.label_entrega, projeto.dataEntrega)
+
+        itemView.findViewById<Button>(R.id.btnVerDetalhes).setOnClickListener {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("PROJECT", projeto as Serializable)
+            startActivity(intent)
         }
     }
 }
