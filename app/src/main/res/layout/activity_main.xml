@@ -18,18 +18,19 @@
             android:id="@+id/tvAppTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/unifocus"
-            android:textSize="28sp"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="32sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvScreenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/meus_projetos"
-            android:textSize="16sp"
-            android:textColor="#666666"
-            android:layout_marginTop="2dp" />
+            android:textColor="@color/text_secondary"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ScrollView
@@ -51,8 +52,11 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_margin="16dp"
-        android:text="@string/novo_projeto_plus"
-        android:backgroundTint="#757575"
-        android:textColor="#FFFFFF" />
+        android:backgroundTint="@color/grey_dark"
+        android:text="@string/novo_projeto"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
