@@ -1,167 +1,148 @@
 package gestaodeprojetos.alunos
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import gestaodeprojetos.alunos.db.AppDatabase
+import gestaodeprojetos.alunos.data.ProjectStorage
 import gestaodeprojetos.alunos.model.Project
-import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Locale
+
 
 class FormActivity : AppCompatActivity() {
 
-    private val database by lazy { AppDatabase.getDatabase(this) }
+    private lateinit var etNomeProjeto: EditText
+    private lateinit var etDisciplina: EditText
+    private lateinit var etDataInicio: EditText
+    private lateinit var etDataEntrega: EditText
+    private lateinit var etDiaEstudo: EditText
+    private lateinit var etHorarioInicio: EditText
+    private lateinit var etHorarioTermino: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
 
-        setupSpinners()
-        setupMasks()
+        etNomeProjeto = findViewById(R.id.etNomeProjeto)
+        etDisciplina = findViewById(R.id.etDisciplina)
+        etDataInicio = findViewById(R.id.etDataInicio)
+        etDataEntrega = findViewById(R.id.etDataEntrega)
+        etDiaEstudo = findViewById(R.id.etDiaEstudo)
+        etHorarioInicio = findViewById(R.id.etHorarioInicio)
+        etHorarioTermino = findViewById(R.id.etHorarioTermino)
 
-        findViewById<Button>(R.id.btnSalvar).setOnClickListener {
-            val projeto = coletarDados()
-            if (projeto != null) {
-                lifecycleScope.launch {
-                    database.projectDao().insert(projeto)
-                    Toast.makeText(this@FormActivity, getString(R.string.project_saved), Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.fill_project_name), Toast.LENGTH_SHORT).show()
-            }
-        }
+        // RF-03: seletores de data e horário usando componentes Android nativos se o ícone for clicado.
+        findViewById<ImageView>(R.id.ivIconDataInicio).setOnClickListener { abrirDatePicker(etDataInicio) }
+        findViewById<ImageView>(R.id.ivIconDataEntrega).setOnClickListener { abrirDatePicker(etDataEntrega) }
+        findViewById<ImageView>(R.id.ivIconDiaEstudo).setOnClickListener { abrirDatePicker(etDiaEstudo) }
+        findViewById<ImageView>(R.id.ivIconHorarioInicio).setOnClickListener { abrirTimePicker(etHorarioInicio) }
+        findViewById<ImageView>(R.id.ivIconHorarioTermino).setOnClickListener { abrirTimePicker(etHorarioTermino) }
 
-        findViewById<Button>(R.id.btnCancelar).setOnClickListener {
-            finish()
-        }
+        findViewById<Button>(R.id.btnSalvar).setOnClickListener { salvarProjeto() }
+        findViewById<Button>(R.id.btnCancelar).setOnClickListener { finish() }
     }
 
-    private fun setupMasks() {
-        val etDataInicio = findViewById<EditText>(R.id.etDataInicio)
-        val etDataEntrega = findViewById<EditText>(R.id.etDataEntrega)
-        val etHorarioInicio = findViewById<EditText>(R.id.etHorarioInicio)
-        val etHorarioTermino = findViewById<EditText>(R.id.etHorarioTermino)
+    private fun salvarProjeto() {
+        val nome = etNomeProjeto.text.toString().trim()
+        val disciplina = etDisciplina.text.toString().trim()
+        val dataInicio = etDataInicio.text.toString()
+        val dataEntrega = etDataEntrega.text.toString()
+        val diaEstudo = etDiaEstudo.text.toString()
+        val horarioInicio = etHorarioInicio.text.toString()
+        val horarioTermino = etHorarioTermino.text.toString()
 
-        etDataInicio.addDateMaskWatcher()
-        etDataEntrega.addDateMaskWatcher()
-        etHorarioInicio.addTimeMaskWatcher()
-        etHorarioTermino.addTimeMaskWatcher()
-    }
+        // RF-08 (Dia 11): impedir salvamento quando campos obrigatórios
+        // estiverem vazios.
+        val erro = validarCampos(
+            nome, disciplina, dataInicio, dataEntrega,
+            diaEstudo, horarioInicio, horarioTermino
+        )
+        if (erro != null) {
+            Toast.makeText(this, erro, Toast.LENGTH_SHORT).show()
+            return
+        }
 
-    private fun coletarDados(): Project? {
-        val nome = findViewById<EditText>(R.id.etNomeProjeto).text.toString()
-        if (nome.isEmpty()) return null
-
-        val disciplina = findViewById<EditText>(R.id.etDisciplina).text.toString()
-        val dataInicio = findViewById<EditText>(R.id.etDataInicio).text.toString()
-        val dataEntrega = findViewById<EditText>(R.id.etDataEntrega).text.toString()
-        val diaEstudo = findViewById<Spinner>(R.id.spDiaEstudo).selectedItem.toString()
-        val horarioInicio = findViewById<EditText>(R.id.etHorarioInicio).text.toString()
-        val horarioTermino = findViewById<EditText>(R.id.etHorarioTermino).text.toString()
-        val observacoes = findViewById<EditText>(R.id.etObservacoes).text.toString()
-
-        return Project(
+        val projeto = Project(
             nome = nome,
             disciplina = disciplina,
             dataInicio = dataInicio,
             dataEntrega = dataEntrega,
             diaEstudo = diaEstudo,
             horarioInicio = horarioInicio,
-            horarioTermino = horarioTermino,
-            observacoes = observacoes,
-            isCompleted = false
+            horarioTermino = horarioTermino
         )
+
+        // RF-09 (Dia 12): persistência simples, sem prejudicar o fluxo
+        // principal — se falhar, o app continua funcionando normalmente,
+        // só não restaura o projeto na próxima abertura.
+        try {
+            ProjectStorage.salvarUltimoProjeto(this, projeto)
+        } catch (e: Exception) {
+            // Persistência é "desejável" (RF-09), não obrigatória (risco R1).
+        }
+
+        // RF-04/RF-05 (Dia 8): Intent explícita com os dados reais via putExtra.
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra(DetailActivity.EXTRA_NOME, projeto.nome)
+            putExtra(DetailActivity.EXTRA_DISCIPLINA, projeto.disciplina)
+            putExtra(DetailActivity.EXTRA_INICIO, projeto.dataInicio)
+            putExtra(DetailActivity.EXTRA_ENTREGA, projeto.dataEntrega)
+            putExtra(DetailActivity.EXTRA_DIA_ESTUDO, projeto.diaEstudo)
+            putExtra(DetailActivity.EXTRA_HORARIO_INICIO, projeto.horarioInicio)
+            putExtra(DetailActivity.EXTRA_HORARIO_TERMINO, projeto.horarioTermino)
+        }
+        startActivity(intent)
+        finish()
     }
 
-    private fun setupSpinners() {
-        val dias = arrayOf("Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira")
-        val adapterDias = ArrayAdapter(this, android.R.layout.simple_spinner_item, dias)
-        adapterDias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        findViewById<Spinner>(R.id.spDiaEstudo).adapter = adapterDias
+    private fun validarCampos(
+        nome: String,
+        disciplina: String,
+        dataInicio: String,
+        dataEntrega: String,
+        diaEstudo: String,
+        horarioInicio: String,
+        horarioTermino: String
+    ): String? = when {
+        nome.isBlank() -> "Informe o nome do projeto"
+        disciplina.isBlank() -> "Informe a disciplina"
+        dataInicio.isBlank() -> "Informe a data de início"
+        dataEntrega.isBlank() -> "Informe a data de entrega"
+        diaEstudo.isBlank() -> "Informe o dia de estudo"
+        horarioInicio.isBlank() -> "Informe o horário de início"
+        horarioTermino.isBlank() -> "Informe o horário de término"
+        else -> null
     }
 
-    private fun EditText.addDateMaskWatcher() {
-        this.addTextChangedListener(object : TextWatcher {
-            private var isUpdating = false
-            private var oldText = ""
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                oldText = s.toString()
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (isUpdating) return
-
-                val clean = s.toString().replace("/", "")
-                val oldClean = oldText.replace("/", "")
-
-                if (clean.length == oldClean.length) return
-
-                val sb = StringBuilder()
-                var index = 0
-                for (i in clean.indices) {
-                    if (index == 2 || index == 5) {
-                        sb.append('/')
-                        index++
-                    }
-                    sb.append(clean[i])
-                    index++
-                }
-
-                isUpdating = true
-                val currentFormatted = sb.toString()
-                this@addDateMaskWatcher.setText(currentFormatted)
-                this@addDateMaskWatcher.setSelection(currentFormatted.length)
-                isUpdating = false
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
+    private fun abrirDatePicker(campo: EditText) {
+        val calendario = Calendar.getInstance()
+        DatePickerDialog(
+            this,
+            { _, ano, mes, dia ->
+                campo.setText(String.format(Locale.getDefault(), "%02d/%02d/%04d", dia, mes + 1, ano))
+            },
+            calendario.get(Calendar.YEAR),
+            calendario.get(Calendar.MONTH),
+            calendario.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
-    private fun EditText.addTimeMaskWatcher() {
-        this.addTextChangedListener(object : TextWatcher {
-            private var isUpdating = false
-            private var oldText = ""
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                oldText = s.toString()
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (isUpdating) return
-
-                val clean = s.toString().replace(":", "")
-                val oldClean = oldText.replace(":", "")
-
-                if (clean.length == oldClean.length) return
-
-                val sb = StringBuilder()
-                var index = 0
-                for (i in clean.indices) {
-                    if (index == 2) {
-                        sb.append(':')
-                        index++
-                    }
-                    sb.append(clean[i])
-                    index++
-                }
-
-                isUpdating = true
-                val currentFormatted = sb.toString()
-                this@addTimeMaskWatcher.setText(currentFormatted)
-                this@addTimeMaskWatcher.setSelection(currentFormatted.length)
-                isUpdating = false
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
+    private fun abrirTimePicker(campo: EditText) {
+        val calendario = Calendar.getInstance()
+        TimePickerDialog(
+            this,
+            { _, hora, minuto ->
+                campo.setText(String.format(Locale.getDefault(), "%02d:%02d", hora, minuto))
+            },
+            calendario.get(Calendar.HOUR_OF_DAY),
+            calendario.get(Calendar.MINUTE),
+            true
+        ).show()
     }
 }

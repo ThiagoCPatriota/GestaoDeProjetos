@@ -10,11 +10,9 @@ data class Project(
     val id: Long = 0,
     val nome: String,
     val disciplina: String,
-    val dataInicio: String,
+    val dataInicio: String = "-",
     val dataEntrega: String,
-    val diaEstudo: String,
-    val horarioInicio: String,
-    val horarioTermino: String,
-    val observacoes: String = "",
-    val isCompleted: Boolean = false
-) : Serializable
+    val diaEstudo: String = "-",
+    val horarioInicio: String = "-",
+    val horarioTermino: String = "-"
+)

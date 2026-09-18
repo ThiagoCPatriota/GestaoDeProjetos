@@ -4,28 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
-    app:strokeColor="@color/grey_light"
-    app:strokeWidth="1dp">
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card_projeto"
+    android:padding="12dp"
+    android:layout_marginTop="12dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="12dp">
-
-        <ImageView
-            android:id="@+id/ivProjectPlaceholder"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@color/grey_light"
-            android:contentDescription="@null"
-            android:padding="16dp"
-            android:src="@drawable/ic_list"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvNomeProjeto"

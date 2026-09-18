@@ -24,15 +24,8 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".FormActivity"
-            android:label="@string/novo_projeto"
-            android:theme="@style/Theme.GestaoDeProjetos" />
-
-        <activity
-            android:name=".DetailActivity"
-            android:label="@string/detalhes_projeto"
-            android:theme="@style/Theme.GestaoDeProjetos" />
+        <activity android:name=".FormActivity" android:exported="false" />
+        <activity android:name=".DetailActivity" android:exported="false" />
     </application>
 
 </manifest>
