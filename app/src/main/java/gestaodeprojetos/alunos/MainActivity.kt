@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import gestaodeprojetos.alunos.data.ProjectStorage
 import gestaodeprojetos.alunos.model.Project
+import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Recarrega a lista sempre que a tela volta a ficar visível, para
+        // refletir um projeto recém-cadastrado (RF-09 / CA-08, Dia 12).
         carregarProjetos()
     }
 
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
             Project("Trabalho de Banco de Dados", "Banco de Dados", "08/09", "22/09", "15/09", "20:00", "22:00")
         )
 
+        // RF-09 (Dia 12): se houver um projeto salvo em SharedPreferences,
+        // ele aparece no topo da lista após reabrir o app.
         ProjectStorage.carregarUltimoProjeto(this)?.let { salvo ->
             projetos.add(0, salvo)
         }
@@ -47,8 +53,10 @@ class MainActivity : AppCompatActivity() {
             val itemView = inflater.inflate(R.layout.item_project, container, false)
 
             itemView.findViewById<TextView>(R.id.tvNomeProjeto).text = projeto.nome
-            itemView.findViewById<TextView>(R.id.tvDisciplina).text = getString(R.string.label_disciplina, projeto.disciplina)
-            itemView.findViewById<TextView>(R.id.tvEntrega).text = getString(R.string.label_entrega, projeto.dataEntrega)
+            itemView.findViewById<TextView>(R.id.tvDisciplina).text =
+                "Disciplina: ${projeto.disciplina}"
+            itemView.findViewById<TextView>(R.id.tvEntrega).text =
+                "Entrega: ${projeto.dataEntrega}"
 
             itemView.findViewById<Button>(R.id.btnVerDetalhes).setOnClickListener {
                 val intent = Intent(this, DetailActivity::class.java).apply {
@@ -63,7 +71,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            container.addView(itemView)
+        itemView.findViewById<TextView>(R.id.tvNomeProjeto).text = projeto.nome
+        itemView.findViewById<TextView>(R.id.tvDisciplina).text = getString(R.string.label_disciplina, projeto.disciplina)
+        itemView.findViewById<TextView>(R.id.tvEntrega).text = getString(R.string.label_entrega, projeto.dataEntrega)
+
+        itemView.findViewById<Button>(R.id.btnVerDetalhes).setOnClickListener {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("PROJECT", projeto as Serializable)
+            startActivity(intent)
         }
     }
 }

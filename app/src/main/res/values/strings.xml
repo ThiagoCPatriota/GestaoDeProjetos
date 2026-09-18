@@ -26,10 +26,4 @@
     <string name="label_horario_termino">Horário de Término</string>
     <string name="btn_salvar">Salvar</string>
     <string name="btn_cancelar">Cancelar</string>
-    <string name="concluido">Concluído</string>
-    <string name="ver_detalhes">Ver Detalhes</string>
-
-    <string name="inicio">Início</string>
-    <string name="projetos">Projetos</string>
-    <string name="perfil">Perfil</string>
 </resources>
